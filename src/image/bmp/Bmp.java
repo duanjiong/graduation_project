@@ -130,8 +130,8 @@ public class Bmp {
 				int index = 0;
 				for (int y = 0; y < h; y++) {
 					for (int x = 0; x < w; x++) {
-						image.comps[0][index] = rgb[(3*w+pad)*(h-1-y)+3*x];
-						image.comps[1][index] = rgb[(3*w+pad)*(h-1-y)+3*x];
+						image.comps[0][index] = rgb[(3*w+pad)*(h-1-y)+3*x+2];
+						image.comps[1][index] = rgb[(3*w+pad)*(h-1-y)+3*x+1];
 						image.comps[2][index] = rgb[(3*w+pad)*(h-1-y)+3*x];
 						index++;
 					}
