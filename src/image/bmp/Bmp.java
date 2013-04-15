@@ -137,6 +137,8 @@ public class Bmp {
 					}
 				}
 				
+			} else {
+				System.out.println("the file format is not supported!");
 			}
 			
 			dataInput.close();
