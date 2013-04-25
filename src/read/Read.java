@@ -4,12 +4,15 @@
 package read;
 
 import image.Image;
+import image.PrintImage;
 
 import java.awt.Graphics;
 import java.io.DataInputStream;
 import java.io.InputStream;
 import java.net.Socket;
 import java.sql.Time;
+
+import lib.Help;
 
 import draw.Draw;
 
@@ -59,15 +62,31 @@ public class Read {
 					break;
 				}
 				
+//				int countTemp = count;
+//				for (int c = 0; c < 3; c++) {
+//					count = countTemp;
+//					for (int d = 0; d < h; d++) {
+//						for (int e = 0; e < w; e++) {
+//							image.comps[c][count] = input.readFloat();
+//							count++;
+//						}
+//						count += image.width-w;
+//					}
+//				}
+				
+				
 				int countTemp = count;
-				for (int c = 0; c < 3; c++) {
+				byte[] bytes = new byte[w*4];
+				for (int c = 0; c < image.numcomps; c++) {
 					count = countTemp;
 					for (int d = 0; d < h; d++) {
+						input.readFully(bytes, 0, w*4);
+						System.out.println("read:"+d+":"+bytes[0]);
 						for (int e = 0; e < w; e++) {
-							image.comps[c][count] = input.readFloat();
+							image.comps[c][count] = Help.getFloat(bytes, e*4);
 							count++;
 						}
-						count += image.width-w;
+						count += image.width - w;
 					}
 				}
 				
@@ -83,6 +102,7 @@ public class Read {
 				if (b == 0) {
 					Draw.draw(temp, g);
 					continue;
+					//return;
 				}
 				
 				

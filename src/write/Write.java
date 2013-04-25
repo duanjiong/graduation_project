@@ -6,6 +6,8 @@ package write;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
+import lib.Help;
+
 import image.Image;
 
 /**
@@ -15,6 +17,16 @@ import image.Image;
 public class Write {
 
 	public static void write(Socket socket, Image image) throws Exception {
+		
+		byte[][] bytes = new byte[image.numcomps][image.height*image.width*4];
+		for (int a = 0; a < image.numcomps; a++) {
+			for (int b = 0; b < image.height; b++) {
+				for (int c = 0; c < image.width; c++) {
+					Help.putFloat(bytes[a], image.comps[a][b*image.width+c], b*image.width*4 + c*4);
+				}
+			}
+		}
+		
 		DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 		
 		output.writeInt(image.height);
@@ -54,17 +66,28 @@ public class Write {
 				}
 				
 				
+//				int countTemp = count;
+//				for (int c = 0; c < 3; c++) {
+//					count = countTemp;
+//					for (int d = 0; d < h; d++) {
+//						for (int e = 0; e < w; e++) {
+//							output.writeFloat(image.comps[c][count]);
+//							count++;
+//						}
+//						count += image.width-w;
+//						
+//					}
+//				}
+				
 				int countTemp = count;
-				for (int c = 0; c < 3; c++) {
+				for (int c = 0; c < image.numcomps; c++) {
 					count = countTemp;
-					for (int d = 0; d < h; d++) {
-						for (int e = 0; e < w; e++) {
-							output.writeFloat(image.comps[c][count]);
-							count++;
-						}
-						count += image.width-w;
-						
+					for (int d  = 0; d < h; d++) {
+						output.write(bytes[c], count*4, w*4);
+						//System.out.println("write:"+d+":"+bytes[c][count*4]);
+						count += image.width;
 					}
+					
 				}
 			}
 		}

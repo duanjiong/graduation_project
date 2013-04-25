@@ -23,6 +23,10 @@ import read.Read;
  *
  */
 public class Client extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8479103035760023380L;
 	public static Socket socket = null;
 	public JPanel panel = null;
 	
