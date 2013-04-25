@@ -11,12 +11,12 @@ public class Image {
 	public int height;
 	public int width;
 	public int numcomps;
-	public byte[][] comps;
+	public float[][] comps;
 	
 	public Image(int heigth, int width, int numcomps) {
 		this.height = heigth;
 		this.width = width;
 		this.numcomps = numcomps;
-		comps = new byte[numcomps][heigth*width];
+		comps = new float[numcomps][heigth*width];
 	}
 }

@@ -22,14 +22,17 @@ public class Bmp {
 	public Image bmpToImage(String filename) {
 		int width;
 		int heigth;
-		int numcomps;
+//		int numcomps;
 		int pad, w, h;
-		byte[] rgb;
+		short[] rgb;
 		Image image = null;
 		RandomAccessFile dataInput = null;
 		try {
 			dataInput = new RandomAccessFile(filename, "r");
-			file_h.bfType = dataInput.readUnsignedShort();
+			file_h.bfType = dataInput.readUnsignedByte();
+			file_h.bfType += dataInput.readUnsignedByte()<<8;
+			
+			System.out.println(file_h.bfType);
 			
 			if (file_h.bfType != 19778) {
 				System.out.println("Error, not a Bmp file!");
@@ -76,7 +79,8 @@ public class Bmp {
 				
 				info_h.biPlanes = dataInput.readUnsignedShort();
 				
-				info_h.biBitCount = dataInput.readUnsignedShort();
+				info_h.biBitCount = dataInput.readUnsignedByte();
+				info_h.biBitCount += dataInput.readUnsignedByte()<<8;
 				
 				info_h.biCompression = dataInput.readUnsignedByte();
 				info_h.biCompression += (dataInput.readUnsignedByte()<<8);
@@ -112,10 +116,6 @@ public class Bmp {
 			
 			if (info_h.biBitCount == 24) {
 				image = new Image(heigth, width, 3);
-				if (image == null) {
-					dataInput.close();
-					return null;
-				}
 				
 				dataInput.seek(0);
 				dataInput.seek(file_h.bfOffBits);
@@ -124,9 +124,10 @@ public class Bmp {
 				h = (int)info_h.biHeigth;
 				
 				pad = ((3*w)%4 != 0) ? (4-(3*w)%4) : 0;
-				rgb = new byte[(3*w+pad)*h];
-				dataInput.read(rgb);
-				
+				rgb = new short[(3*w+pad)*h];
+				for (int i = 0; i < rgb.length; i++){
+					rgb[i] = (short)dataInput.readUnsignedByte();
+				}
 				int index = 0;
 				for (int y = 0; y < h; y++) {
 					for (int x = 0; x < w; x++) {
